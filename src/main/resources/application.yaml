@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+  thymeleaf:
+      mode: HTML5
+  http:
+    encoding:
+      charset: utf-8
+    converters:
+      preferred-json-mapper: jackson
+    multipart:
+      max-file-size: 10MB
+  application:
+    name: RedPackets
+  mvc:
+    static-path-pattern: /**
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    pool:
+      max-idle: 300
+      min-idle: 10
+      max-active: 600
+      max-wait: 1000
+      max-total: 100
+      block-when-exhausted: false
+    timeout: 0
