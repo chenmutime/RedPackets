@@ -7,7 +7,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
- * Created by minming.he on 2017/7/31.
+ * Created by chenmutime on 2017/7/31.
  */
 @SpringBootApplication
 @EnableAsync

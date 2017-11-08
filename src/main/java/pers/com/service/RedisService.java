@@ -1,7 +1,6 @@
 package pers.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import pers.com.constant.CommonConstant;
@@ -13,13 +12,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by minming.he on 2017/11/7.
+ * Created by chenmutime on 2017/11/7.
  */
 @Service
 @EnableTransactionManagement
 public class RedisService {
 
-    private int WAIT_QUEUE = 300;
+    private int GOOD_SIZE = 100;
+    private int WAIT_QUEUE = GOOD_SIZE + GOOD_SIZE/5;
     private volatile boolean isEnd = false;
     private volatile AtomicInteger size = new AtomicInteger();
 
@@ -55,7 +55,7 @@ public class RedisService {
             }
         }
     }
-
+    //等待队列空了，但还有库存怎么办？
     public void stop(String packetName){
         System.out.println("活动结束！");
         isEnd = true;

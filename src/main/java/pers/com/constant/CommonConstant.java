@@ -1,7 +1,7 @@
 package pers.com.constant;
 
 /**
- * Created by minming.he on 2017/11/7.
+ * Created by chenmutime on 2017/11/7.
  */
 public class CommonConstant {
 
