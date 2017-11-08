@@ -35,8 +35,8 @@ public class IndexController {
     @RequestMapping("/start")
     @Async
     public String start(@RequestParam("packetName")String packetName){
-        List<Packet> list = new ArrayList<>(100);
-        for(int i=0;i<100;i++){
+        List<Packet> list = new ArrayList<>(RedisService.GOOD_SIZE);
+        for(int i=0;i<RedisService.GOOD_SIZE;i++){
             Packet packet = new Packet();
             packet.setId(UUID.randomUUID().toString());
             packet.setName(packetName);

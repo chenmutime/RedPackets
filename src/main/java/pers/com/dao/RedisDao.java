@@ -36,4 +36,8 @@ public class RedisDao {
     public void delete(String key){
         redisTemplate.delete(key);
     }
+
+    public boolean isFinish(String packetName){
+        return getPacketsList().size(packetName) == 0;
+    }
 }

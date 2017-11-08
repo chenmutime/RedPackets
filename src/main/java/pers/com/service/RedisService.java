@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EnableTransactionManagement
 public class RedisService {
 
-    private int GOOD_SIZE = 100;
-    private int WAIT_QUEUE = GOOD_SIZE + GOOD_SIZE/5;
-    private volatile boolean isEnd = false;
+    public static final int GOOD_SIZE = 100;
+    private int WAIT_QUEUE_SIZE = 120;
+    private volatile boolean isFinish = false;
     private volatile AtomicInteger size = new AtomicInteger();
 
     @Autowired
@@ -29,10 +29,10 @@ public class RedisService {
     @Autowired
     private RedisDao redisDao;
 
-    private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(WAIT_QUEUE);
+    private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(WAIT_QUEUE_SIZE);
 
     public boolean joinReuqestQueue(String tel) {
-        if(size.get() < WAIT_QUEUE) {
+        if(size.get() < WAIT_QUEUE_SIZE) {
             try {
                 requestQueue.put(tel);
                 size.incrementAndGet();
@@ -41,24 +41,36 @@ public class RedisService {
             }
             return true;
         }else{
-            System.out.println("网络堵塞");
+            System.out.println("系统繁忙");
         }
         return false;
     }
 
     public void start(String packetName){
         System.out.println("活动开始！");
-        isEnd = false;
-        while(!isEnd){
+        isFinish = false;
+        while(!isFinish){
             if(!requestQueue.isEmpty()) {
+                if(redisDao.isFinish(packetName)){
+                    System.out.println("活动已经结束了");
+                    isFinish = true;
+                    break;
+                }
                 getRedPacket(packetName, requestQueue.poll());
             }
+            if(size.get() == WAIT_QUEUE_SIZE && requestQueue.isEmpty() && !redisDao.isFinish(packetName)){
+                System.out.println("等待队列耗尽但是仍有库存，重新开放队列");
+                size.set(0);
+            }
+        }
+        if(isFinish){
+            stop(packetName);
         }
     }
-    //等待队列空了，但还有库存怎么办？
+
     public void stop(String packetName){
         System.out.println("活动结束！");
-        isEnd = true;
+        isFinish = true;
         redisDao.delete(CommonConstant.RedisKey.SUCCESS_LIST);
         redisDao.delete(packetName);
         size.set(0);
@@ -67,11 +79,6 @@ public class RedisService {
     }
 
     public void getRedPacket(String packetName, String tel){
-        if(redisDao.getPacketsList().size(packetName) == 0){
-            System.out.println("活动已经结束了");
-            isEnd = true;
-            return;
-        }
         if(!redisDao.isMemberOfSuccessList(tel)) {
             String packetId = redisDao.getPacketsList().leftPop(packetName).toString();
             Packet packet = packetService.bindRedPacket(packetId, tel);
