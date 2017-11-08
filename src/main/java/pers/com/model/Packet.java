@@ -19,7 +19,7 @@ public class Packet {
     @Column
     private String name;
     @Column
-    private Double value;
+    private Integer value;
     @Column
     private String tel;
 
@@ -39,11 +39,11 @@ public class Packet {
         this.name = name;
     }
 
-    public Double getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 

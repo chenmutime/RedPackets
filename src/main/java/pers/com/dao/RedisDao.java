@@ -17,12 +17,23 @@ public class RedisDao {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public Set getSuccessList(){
-        return redisTemplate.opsForSet().members(CommonConstant.RedisKey.SUCCESS_LIST);
+    public void addToSuccessList(String ele){
+        redisTemplate.opsForSet().add(CommonConstant.RedisKey.SUCCESS_LIST, ele);
+    }
+
+    public boolean isMemberOfSuccessList(String ele){
+        return redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.SUCCESS_LIST, ele);
+    }
+
+    public Long getSizeOfSuccessList(){
+        return redisTemplate.opsForSet().size(CommonConstant.RedisKey.SUCCESS_LIST);
     }
 
     public ListOperations getPacketsList(){
         return redisTemplate.opsForList();
     }
 
+    public void delete(String key){
+        redisTemplate.delete(key);
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import pers.com.dao.PacketDao;
+import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class PacketService {
     @Autowired
     private PacketDao packetDao;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisDao redisDao;
 
     public Packet bindRedPacket(String id, String tel){
         Packet packet = null;
@@ -36,12 +37,16 @@ public class PacketService {
         packets = packetDao.save(packets);
         if(null != packets && !packets.isEmpty()){
             List<String> packetIds = packets.stream().map(Packet::getId).collect(Collectors.toList());
-            redisTemplate.opsForList().leftPushAll(packetName,packetIds);
+            redisDao.getPacketsList().leftPushAll(packetName,packetIds);
         }
     }
 
     public Packet findByTel(String tel){
         return packetDao.findByTel(tel);
+    }
+
+    public void deleteAll(){
+        packetDao.deleteAll();
     }
 
 }
