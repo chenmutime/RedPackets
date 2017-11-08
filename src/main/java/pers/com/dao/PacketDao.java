@@ -10,5 +10,5 @@ import pers.com.model.Packet;
 @Repository
 public interface PacketDao extends JpaRepository<Packet, String> {
 
-    Packet findByTel(Integer tel);
+    Packet findByTel(String tel);
 }

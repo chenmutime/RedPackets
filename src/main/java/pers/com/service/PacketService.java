@@ -22,10 +22,10 @@ public class PacketService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public Packet bindRedPacket(String id, Integer tel){
+    public Packet bindRedPacket(String id, String tel){
         Packet packet = null;
         if(null == packetDao.findByTel(tel)) {
-            packet = packetDao.getOne(id);
+            packet = packetDao.findOne(id);
             packet.setTel(tel);
             packet = packetDao.save(packet);
         }
@@ -40,7 +40,7 @@ public class PacketService {
         }
     }
 
-    public Packet findByTel(Integer tel){
+    public Packet findByTel(String tel){
         return packetDao.findByTel(tel);
     }
 

@@ -1,6 +1,8 @@
 package pers.com.model;
 
 import org.aspectj.lang.annotation.control.CodeGenerationHint;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
@@ -13,14 +15,13 @@ public class Packet {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.TABLE, generator="payablemoney_gen")
     private String id;
     @Column
     private String name;
     @Column
     private Double value;
     @Column
-    private Integer tel;
+    private String tel;
 
     public String getId() {
         return id;
@@ -46,11 +47,11 @@ public class Packet {
         this.value = value;
     }
 
-    public Integer getTel() {
+    public String getTel() {
         return tel;
     }
 
-    public void setTel(Integer tel) {
+    public void setTel(String tel) {
         this.tel = tel;
     }
 }

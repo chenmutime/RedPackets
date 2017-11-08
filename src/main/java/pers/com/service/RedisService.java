@@ -9,6 +9,7 @@ import pers.com.model.Packet;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by minming.he on 2017/11/7.
@@ -18,6 +19,7 @@ import java.util.concurrent.BlockingQueue;
 public class RedisService {
 
     private volatile boolean isEnd = false;
+    private volatile AtomicInteger size = new AtomicInteger();
 
     @Autowired
     private PacketService packetService;
@@ -25,12 +27,13 @@ public class RedisService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private BlockingQueue<Integer> requestQueue = new ArrayBlockingQueue<Integer>(1000);
+    private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(1000);
 
-    public boolean joinReuqestQueue(Integer tel) {
-        if(requestQueue.size() < 1000) {
+    public boolean joinReuqestQueue(String tel) {
+        if(size.get() < 1000) {
             try {
                 requestQueue.put(tel);
+                size.incrementAndGet();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -43,7 +46,7 @@ public class RedisService {
         System.out.println("活动开始！");
         while(!isEnd){
             if(!requestQueue.isEmpty())
-                getRedPacket(packetName, requestQueue.peek());
+                getRedPacket(packetName, requestQueue.poll());
         }
     }
 
@@ -52,7 +55,7 @@ public class RedisService {
         isEnd = true;
     }
 
-    public void getRedPacket(String packetName, Integer tel){
+    public void getRedPacket(String packetName, String tel){
         if(redisTemplate.opsForList().size(packetName) == 0){
             return;
         }
@@ -68,7 +71,7 @@ public class RedisService {
         }
     }
 
-    public String checkRedPacket(String packetName, Integer tel){
+    public String checkRedPacket(String packetName, String tel){
         String resultMsg = "";
         if(redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.SUCCESS_LIST,tel)){
             Packet packet = packetService.findByTel(tel);
