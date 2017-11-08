@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import pers.com.constant.CommonConstant;
+import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,6 +27,9 @@ public class RedisService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private RedisDao redisDao;
 
     private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(1000);
 
@@ -56,27 +60,27 @@ public class RedisService {
     }
 
     public void getRedPacket(String packetName, String tel){
-        if(redisTemplate.opsForList().size(packetName) == 0){
+        if(redisDao.getPacketsList().size(packetName) == 0){
             return;
         }
-        if(!redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.SUCCESS_LIST,tel)) {
-            String packetId = redisTemplate.opsForList().leftPop(packetName).toString();
+        if(!redisDao.getSuccessList().contains(tel)) {
+            String packetId = redisDao.getPacketsList().leftPop(packetName).toString();
             Packet packet = packetService.bindRedPacket(packetId, tel);
             if (null != packet) {
                 System.out.println(tel+"抢到红包"+packet.getValue()+"元！");
-                redisTemplate.opsForSet().add(CommonConstant.RedisKey.SUCCESS_LIST, tel);
+                redisDao.getSuccessList().add(tel);
             } else {
-                redisTemplate.opsForList().leftPush(packetName, packetId);
+                redisDao.getPacketsList().leftPush(packetName, packetId);
             }
         }
     }
 
     public String checkRedPacket(String packetName, String tel){
         String resultMsg = "";
-        if(redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.SUCCESS_LIST,tel)){
+        if(redisDao.getSuccessList().contains(tel)){
             Packet packet = packetService.findByTel(tel);
             resultMsg += "恭喜您抢到一份金额为"+packet.getValue()+"元的红包";
-        }else if(redisTemplate.opsForList().size(packetName) == 0){
+        }else if(redisDao.getPacketsList().size(packetName) == 0){
             resultMsg += "抢红包失败";
             return resultMsg;
         }
