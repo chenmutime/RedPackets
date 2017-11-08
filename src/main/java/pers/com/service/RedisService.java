@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EnableTransactionManagement
 public class RedisService {
 
+    private int WAIT_QUEUE = 300;
     private volatile boolean isEnd = false;
     private volatile AtomicInteger size = new AtomicInteger();
 
@@ -28,10 +29,10 @@ public class RedisService {
     @Autowired
     private RedisDao redisDao;
 
-    private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(50);
+    private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(WAIT_QUEUE);
 
     public boolean joinReuqestQueue(String tel) {
-        if(size.get() < 100) {
+        if(size.get() < WAIT_QUEUE) {
             try {
                 requestQueue.put(tel);
                 size.incrementAndGet();

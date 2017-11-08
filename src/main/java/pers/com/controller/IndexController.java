@@ -27,38 +27,24 @@ public class IndexController {
 
 //    参与秒杀
     @RequestMapping("/miaosha")
-    public String requestRedPacket(@RequestParam("tel")String tel){
-        redisService.joinReuqestQueue(tel);
+    public String requestRedPacket(){
+        redisService.joinReuqestQueue(""+new Random().nextInt(1000));
         return "success";
     }
 
     @RequestMapping("/start")
     @Async
     public String start(@RequestParam("packetName")String packetName){
-        List<Packet> list = new ArrayList<>(50);
-        for(int i=0;i<50;i++){
+        List<Packet> list = new ArrayList<>(100);
+        for(int i=0;i<100;i++){
             Packet packet = new Packet();
             packet.setId(UUID.randomUUID().toString());
             packet.setName(packetName);
-            packet.setValue(new Random().nextInt(50));
+            packet.setValue(new Random().nextInt(100));
             list.add(packet);
         }
         packetService.saveSmallPackets(packetName, list);
         redisService.start(packetName);
-        return "success";
-    }
-
-    @RequestMapping("/execute")
-    @Async
-    public String execute(@RequestParam("packetName")String packetName){
-        for(int i=1000;i<1200;i++){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    redisService.joinReuqestQueue(""+new Random().nextInt(1000));
-                }
-            }).start();;
-        }
         return "success";
     }
 
