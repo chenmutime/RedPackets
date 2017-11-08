@@ -1,5 +1,6 @@
 package pers.com.controller;
 
+import org.apache.coyote.Response;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,8 +58,8 @@ public class IndexController {
 
     //前端定时请求查看是否抢到红包
     @RequestMapping("/check")
-    public String check(@RequestParam("packetName")String packetName, @RequestParam("tel")String tel){
-        return redisService.checkRedPacket(packetName, tel);
+    public Response check(@RequestParam("packetName")String packetName, @RequestParam("tel")String tel){
+         return redisService.checkRedPacket(tel);
     }
 }
 
