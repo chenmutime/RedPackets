@@ -5,3 +5,7 @@ springboot+redis+mysql实现抢红包功能
 >后端维护了一个size大于库存数量的等待队列，为的是限流，依次从队列中获取请求，再从redis库存队列中为其分配一个id，这个id就是存在mysql的红包的主键，最后拿这个id去更新mysql，将红包与用户的手机号绑定在一起。当然，有可能失败，失败的情况下会将刚才从redis库存队列中拿到的id重新装填回去。
 
 ![基本架构图](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/RedPacket.png)
+
+##测试：
+测试的时候先用http://localhost:8080/start?packetName=red创建一些数据，packetName表示红包的名称
+然后使用JMeter开始指定数量的线程请求http://localhost:8080/miaosha，对应miaosha这个方法里，我随机生产了数字用以表示手机号
