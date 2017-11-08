@@ -25,6 +25,14 @@ public class RedisDao {
         return redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.SUCCESS_LIST, ele);
     }
 
+    public void addToFailedList(String ele){
+        redisTemplate.opsForSet().add(CommonConstant.RedisKey.FAILED_LIST, ele);
+    }
+
+    public boolean isMemberOfFailedList(String ele){
+        return redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.FAILED_LIST, ele);
+    }
+
     public Long getSizeOfSuccessList(){
         return redisTemplate.opsForSet().size(CommonConstant.RedisKey.SUCCESS_LIST);
     }

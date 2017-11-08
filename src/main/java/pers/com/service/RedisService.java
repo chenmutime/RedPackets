@@ -1,8 +1,10 @@
 package pers.com.service;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringUtils;
 import pers.com.constant.CommonConstant;
 import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
@@ -81,13 +83,18 @@ public class RedisService {
     public void getRedPacket(String packetName, String tel){
         if(!redisDao.isMemberOfSuccessList(tel)) {
             String packetId = redisDao.getPacketsList().leftPop(packetName).toString();
-            Packet packet = packetService.bindRedPacket(packetId, tel);
-            if (null != packet) {
-                System.out.println(tel+"抢到红包"+packet.getValue()+"元！");
-                redisDao.addToSuccessList(tel);
-            } else {
-                System.out.println(tel+"抢红包出现了异常，现在恢复");
-                redisDao.getPacketsList().leftPush(packetName, packetId);
+            if(StringUtils.isEmpty(packetId)){
+                redisDao.addToFailedList(tel);
+            }else {
+                Packet packet = packetService.bindRedPacket(packetId, tel);
+                if (null != packet) {
+                    System.out.println(tel + "抢到红包" + packet.getValue() + "元！");
+                    redisDao.addToSuccessList(tel);
+                } else {
+                    System.out.println(tel + "抢红包出现了异常，现在恢复");
+                    redisDao.addToFailedList(tel);
+                    redisDao.getPacketsList().leftPush(packetName, packetId);
+                }
             }
         }else{
             System.out.println(tel+"已经抢成功过一次！");
@@ -96,16 +103,22 @@ public class RedisService {
         System.out.println("已有"+redisDao.getSizeOfSuccessList()+"个人抢到");
     }
 
-    public String checkRedPacket(String packetName, String tel){
+    public Response checkRedPacket(String tel){
+        Response response = new Response();
         String resultMsg = "";
         if(redisDao.isMemberOfSuccessList(tel)){
             Packet packet = packetService.findByTel(tel);
-            resultMsg += "恭喜您抢到一份金额为"+packet.getValue()+"元的红包";
-        }else if(redisDao.getPacketsList().size(packetName) == 0){
-            resultMsg += "您已经抢成功过一次";
-            return resultMsg;
+            resultMsg += "恭喜您抢到一份金额为"+packet.getValue()+"元的红包，现已存入您的账户";
+            response.setStatus(2000);
+            response.setMessage(resultMsg);
+        }else if(redisDao.isMemberOfFailedList(tel)){
+            resultMsg += "很遗憾失败了";
+            response.setStatus(2000);
+            response.setMessage(resultMsg);
+        }else{
+            response.setStatus(2001);
         }
-        return resultMsg;
+        return response;
     }
 
 }

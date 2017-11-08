@@ -7,5 +7,6 @@ public class CommonConstant {
 
     public interface RedisKey{
         String SUCCESS_LIST = "success_list";
+        String FAILED_LIST = "fail_list";
     }
 }
