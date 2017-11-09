@@ -9,3 +9,6 @@ springboot+redis+mysql实现抢红包功能
 ##测试：</br>
 测试的时候先用(http://localhost:8080/start?packetName=red)创建一些数据，packetName表示红包的名称
 然后使用JMeter开始指定数量的线程请求(http://localhost:8080/miaosha)，对应miaosha这个方法里，我随机生产了数字用以表示手机号
+
+我模拟10000个人抢1000个红包，等待队列为库存数量的2倍</br>
+![测试图](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/qianghongbao.png)
