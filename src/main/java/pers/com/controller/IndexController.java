@@ -29,13 +29,14 @@ public class IndexController {
 //    参与秒杀
     @RequestMapping("/miaosha")
     public String requestRedPacket(){
-        redisService.joinReuqestQueue(""+new Random().nextInt(1000));
+        redisService.joinReuqestQueue(""+System.currentTimeMillis());
         return "success";
     }
 
     @RequestMapping("/start")
     @Async
     public String start(@RequestParam("packetName")String packetName){
+
         List<Packet> list = new ArrayList<>(RedisService.GOOD_SIZE);
         for(int i=0;i<RedisService.GOOD_SIZE;i++){
             Packet packet = new Packet();
