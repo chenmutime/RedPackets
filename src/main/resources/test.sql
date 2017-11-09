@@ -22,7 +22,7 @@ CREATE TABLE `packet` (
   `id` varchar(36) NOT NULL,
   `name` varchar(36) DEFAULT NULL,
   `value` int(8) DEFAULT NULL,
-  `tel` varchar(11) DEFAULT NULL,
+  `tel` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
