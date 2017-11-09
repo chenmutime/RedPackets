@@ -4,6 +4,21 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
+    max-idle: 1000
+    max-wait: 1000
+    min-idle: 100
+    max-active: 1000
+    inital-size: 200
+    poolPreparedStatements: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20
+    testOnReturn: false
+    testOnBorrow: false
+    testWhileIdle: true
+    validationQuery: SELECT 1 FROM DUAL
+    minEvictableIdleTimeMillis: 300000
+    timeBetweenEvictionRunsMillis: 60000
   jpa:
     database-platform: org.hibernate.dialect.MySQL5Dialect
   thymeleaf:
@@ -23,10 +38,10 @@ spring:
     host: 127.0.0.1
     port: 6379
     pool:
-      max-idle: 300
-      min-idle: 10
-      max-active: 600
+      max-idle: 1000
+      min-idle: 500
+      max-active: 2000
       max-wait: 1000
-      max-total: 100
+      max-total: 10000
       block-when-exhausted: false
     timeout: 0

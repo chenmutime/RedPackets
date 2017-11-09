@@ -65,9 +65,9 @@ public class RedisService {
 //                size.set(0);
 //            }
         }
-        if(isFinish){
-            stop(packetName);
-        }
+//        if(isFinish){
+//            stop(packetName);
+//        }
     }
 
     public void stop(String packetName){
@@ -86,12 +86,12 @@ public class RedisService {
             if(StringUtils.isEmpty(packetId)){
                 redisDao.addToFailedList(tel);
             }else {
-                Packet packet = packetService.bindRedPacket(packetId, tel);
-                if (null != packet) {
-//                    System.out.println(tel + "抢到红包" + packet.getValue() + "元！");
+                int result = packetService.bindRedPacket(packetId, tel);
+                if (result > 0) {
+                    System.out.println(tel + "抢到红包！");
                     redisDao.addToSuccessList(tel);
                 } else {
-//                    System.out.println(tel + "抢红包出现了异常，现在恢复");
+                    System.out.println(tel + "抢红包出现了异常，现在恢复");
                     redisDao.addToFailedList(tel);
                     redisDao.getPacketsList().leftPush(packetName, packetId);
                 }

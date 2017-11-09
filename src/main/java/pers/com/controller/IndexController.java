@@ -36,7 +36,7 @@ public class IndexController {
     @RequestMapping("/start")
     @Async
     public String start(@RequestParam("packetName")String packetName){
-
+        redisService.stop(packetName);
         List<Packet> list = new ArrayList<>(RedisService.GOOD_SIZE);
         for(int i=0;i<RedisService.GOOD_SIZE;i++){
             Packet packet = new Packet();
