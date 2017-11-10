@@ -4,8 +4,6 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
-    max-idle: 1000
-    max-wait: 1000
     min-idle: 100
     max-active: 1000
     initial-size: 200

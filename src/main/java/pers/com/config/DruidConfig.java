@@ -39,8 +39,6 @@ public class DruidConfig {
     @Value("${spring.datasource.max-active}")
     private int maxActive;
 
-    @Value("${spring.datasource.max-wait}")
-    private int maxWait;
 
     @Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
     private int timeBetweenEvictionRunsMillis;
@@ -86,7 +84,6 @@ public class DruidConfig {
         datasource.setInitialSize(initialSize);
         datasource.setMinIdle(minIdle);
         datasource.setMaxActive(maxActive);
-        datasource.setMaxWait(maxWait);
         datasource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
         datasource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
         datasource.setValidationQuery(validationQuery);
