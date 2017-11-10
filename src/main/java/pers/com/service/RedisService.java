@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RedisService {
 
     public static final int GOOD_SIZE = 1000;
-    private int WAIT_QUEUE_SIZE = GOOD_SIZE*2;
+    private int WAIT_QUEUE_SIZE = GOOD_SIZE*3;
     private volatile boolean isFinish = false;
     private volatile AtomicInteger size = new AtomicInteger();
 
@@ -42,9 +42,8 @@ public class RedisService {
                 e.printStackTrace();
             }
             return true;
-        }else{
-//            System.out.println("系统繁忙");
         }
+//        System.out.println("系统繁忙");
         return false;
     }
 
@@ -60,14 +59,7 @@ public class RedisService {
                 }
                 getRedPacket(packetName, requestQueue.poll());
             }
-//            if(size.get() == WAIT_QUEUE_SIZE && requestQueue.isEmpty() && !redisDao.isFinish(packetName)){
-//                System.out.println("等待队列耗尽但是仍有库存，重新开放队列");
-//                size.set(0);
-//            }
         }
-//        if(isFinish){
-//            stop(packetName);
-//        }
     }
 
     public void stop(String packetName){
@@ -97,10 +89,10 @@ public class RedisService {
                 }
             }
         }else{
-//            System.out.println(tel+"已经抢成功过一次！");
+            System.out.println(tel+"已经抢成功过一次！");
         }
-//        System.out.println("还剩"+redisDao.getPacketsList().size(packetName)+"个红包");
-//        System.out.println("已有"+redisDao.getSizeOfSuccessList()+"个人抢到");
+        System.out.println("还剩"+redisDao.getPacketsList().size(packetName)+"个红包");
+        System.out.println("已有"+redisDao.getSizeOfSuccessList()+"个人抢到");
     }
 
     public Response checkRedPacket(String tel){

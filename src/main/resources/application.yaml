@@ -8,7 +8,7 @@ spring:
     max-wait: 1000
     min-idle: 100
     max-active: 1000
-    inital-size: 200
+    initial-size: 200
     poolPreparedStatements: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     filters: stat,wall

@@ -23,12 +23,6 @@ public class PacketService {
     private RedisDao redisDao;
 
     public int bindRedPacket(String id, String tel){
-//        Packet packet = null;
-//        if(null == packetDao.findByTel(tel)) {
-//            packet = packetDao.findOne(id);
-//            packet.setTel(tel);
-//            packet = packetDao.save(packet);
-//        }
         return packetDao.bindRedPacket(id, tel);
     }
 

@@ -30,7 +30,7 @@ public class DruidConfig {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.datasource.inital-size}")
+    @Value("${spring.datasource.initial-size}")
     private int initialSize;
 
     @Value("${spring.datasource.min-idle}")
