@@ -7,24 +7,24 @@ import pers.com.dao.PacketDao;
 import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Created by chenmutime on 2017/11/7.
  */
 @Service
-@EnableTransactionManagement
 public class PacketService {
 
     @Autowired
     private PacketDao packetDao;
     @Autowired
     private RedisDao redisDao;
-
-    public int bindRedPacket(String id, String tel){
-        return packetDao.bindRedPacket(id, tel);
-    }
+    @Autowired
+    private RedisService redisService;
 
     public void saveSmallPackets(String packetName, List<Packet> packets){
         packets = packetDao.save(packets);
@@ -34,12 +34,23 @@ public class PacketService {
         }
     }
 
-    public Packet findByTel(String tel){
-        return packetDao.findByTel(tel);
+    public String start(String packetName){
+        List<Packet> list = new ArrayList<>(RedisService.GOOD_SIZE);
+        for(int i=0;i<RedisService.GOOD_SIZE;i++){
+            Packet packet = new Packet();
+            packet.setId(UUID.randomUUID().toString());
+            packet.setName(packetName);
+            packet.setValue(new Random().nextInt(100));
+            list.add(packet);
+        }
+        saveSmallPackets(packetName, list);
+        redisService.start(packetName);
+        return "success";
     }
 
-    public void deleteAll(){
-        packetDao.deleteAll();
+    public String stop(String packetName){
+        redisService.stop(packetName);
+        return "success";
     }
 
 }

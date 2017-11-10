@@ -23,8 +23,6 @@ public class IndexController {
 
     @Resource
     private RedisService redisService;
-    @Resource
-    private PacketService packetService;
 
 //    参与秒杀
     @RequestMapping("/miaosha")
@@ -33,29 +31,6 @@ public class IndexController {
         return "success";
     }
 
-    @RequestMapping("/start")
-    @Async
-    public String start(@RequestParam("packetName")String packetName){
-        redisService.stop(packetName);
-        List<Packet> list = new ArrayList<>(RedisService.GOOD_SIZE);
-        for(int i=0;i<RedisService.GOOD_SIZE;i++){
-            Packet packet = new Packet();
-            packet.setId(UUID.randomUUID().toString());
-            packet.setName(packetName);
-            packet.setValue(new Random().nextInt(100));
-            list.add(packet);
-        }
-        packetService.saveSmallPackets(packetName, list);
-        redisService.start(packetName);
-        return "success";
-    }
-
-    @RequestMapping("/stop")
-    @Async
-    public String stop(@RequestParam("packetName")String packetName){
-        redisService.stop(packetName);
-        return "success";
-    }
 
     //前端定时请求查看是否抢到红包
     @RequestMapping("/check")

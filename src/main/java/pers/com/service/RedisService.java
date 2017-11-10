@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import pers.com.constant.CommonConstant;
+import pers.com.dao.PacketDao;
 import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
 
@@ -17,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by chenmutime on 2017/11/7.
  */
 @Service
-@EnableTransactionManagement
 public class RedisService {
 
     public static final int GOOD_SIZE = 1000;
@@ -26,7 +26,7 @@ public class RedisService {
     private volatile AtomicInteger size = new AtomicInteger();
 
     @Autowired
-    private PacketService packetService;
+    private PacketDao packetDao;
 
     @Autowired
     private RedisDao redisDao;
@@ -43,7 +43,6 @@ public class RedisService {
             }
             return true;
         }
-//        System.out.println("系统繁忙");
         return false;
     }
 
@@ -69,7 +68,7 @@ public class RedisService {
         redisDao.delete(packetName);
         size.set(0);
         requestQueue.clear();
-        packetService.deleteAll();
+        packetDao.deleteAll();
     }
 
     public void getRedPacket(String packetName, String tel){
@@ -78,7 +77,7 @@ public class RedisService {
             if(StringUtils.isEmpty(packetId)){
                 redisDao.addToFailedList(tel);
             }else {
-                int result = packetService.bindRedPacket(packetId, tel);
+                int result = packetDao.bindRedPacket(packetId, tel);
                 if (result > 0) {
                     System.out.println(tel + "抢到红包！");
                     redisDao.addToSuccessList(tel);
@@ -99,7 +98,7 @@ public class RedisService {
         Response response = new Response();
         String resultMsg = "";
         if(redisDao.isMemberOfSuccessList(tel)){
-            Packet packet = packetService.findByTel(tel);
+            Packet packet = packetDao.findByTel(tel);
             resultMsg += "恭喜您抢到一份金额为"+packet.getValue()+"元的红包，现已存入您的账户";
             response.setStatus(2000);
             response.setMessage(resultMsg);

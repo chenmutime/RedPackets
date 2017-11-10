@@ -5,12 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Created by chenmutime on 2017/7/31.
  */
 @SpringBootApplication
 @EnableAsync
+@EnableScheduling
 public class Application extends SpringBootServletInitializer {
 
     @Override
