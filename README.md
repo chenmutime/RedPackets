@@ -7,8 +7,8 @@ springboot+redis+mysql实现抢红包功能
 ![基本架构图](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/RedPacket.png)
 
 ##测试：</br>
-测试的时候先用(http://localhost:8080/start?packetName=red)创建一些数据，packetName表示红包的名称
-然后使用JMeter开始指定数量的线程请求(http://localhost:8080/miaosha)，对应miaosha这个方法里，我随机生产了数字用以表示手机号
+由于使用了定时开启活动和结束活动，需要在TaskService里设置cron</br>
+当活动开启时，使用JMeter请求(http://localhost:8080/miaosha)接口，对应miaosha这个方法里，我随机生产了数字用以表示手机号
 
 我模拟10000个人抢1000个红包，等待队列为库存数量的3倍</br>
 另外，我将mysql的最大连接数设置为了1000，并使用druid作为数据库连接池</br>
