@@ -14,3 +14,5 @@ springboot+redis+mysql实现抢红包功能
 另外，我将mysql的最大连接数设置为了1000，并使用druid作为数据库连接池</br>
 
 ![测试图](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/qianghongbao.png)
+
+![测试图2](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/RedPacket2.png)
