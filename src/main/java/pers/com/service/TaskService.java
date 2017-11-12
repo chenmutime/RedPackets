@@ -14,12 +14,12 @@ public class TaskService {
     private PacketService packetService;
 
     //模拟某日某时开启抢红包活动
-    @Scheduled(cron = "0 13 11 * * ?")
+    @Scheduled(cron = "0 40 14 * * ?")
     public void taskStart(){
         packetService.start("red");
     }
 
-    @Scheduled(cron = "0 15 11 * * ?")
+    @Scheduled(cron = "0 45 14 * * ?")
     public void taskStop(){
         packetService.stop("red");
     }

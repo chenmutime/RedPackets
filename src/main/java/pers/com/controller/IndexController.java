@@ -27,6 +27,9 @@ public class IndexController {
 //    参与秒杀
     @RequestMapping("/miaosha")
     public String requestRedPacket(){
+        if(redisService.isFinish()){
+            return "failed";
+        }
         redisService.joinReuqestQueue(""+System.currentTimeMillis());
         return "success";
     }
@@ -34,8 +37,8 @@ public class IndexController {
 
     //前端定时请求查看是否抢到红包
     @RequestMapping("/check")
-    public Response check(@RequestParam("packetName")String packetName, @RequestParam("tel")String tel){
-         return redisService.checkRedPacket(tel);
+    public String check(@RequestParam("tel")String tel){
+         return redisService.checkRedPacket(tel).getMessage();
     }
 }
 

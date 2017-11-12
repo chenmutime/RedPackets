@@ -33,6 +33,10 @@ public class RedisService {
 
     private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(WAIT_QUEUE_SIZE);
 
+    public boolean isFinish(){
+        return isFinish;
+    }
+
     public boolean joinReuqestQueue(String tel) {
         if(size.get() < WAIT_QUEUE_SIZE) {
             try {
@@ -108,6 +112,7 @@ public class RedisService {
             response.setMessage(resultMsg);
         }else{
             response.setStatus(2001);
+            response.setMessage("继续等待");
         }
         return response;
     }
