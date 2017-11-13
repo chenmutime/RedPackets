@@ -27,11 +27,10 @@ public class IndexController {
 //    参与秒杀
     @RequestMapping("/miaosha")
     public String requestRedPacket(){
-        if(redisService.isFinish()){
-            return "failed";
+        if(redisService.joinReuqestQueue(""+System.currentTimeMillis())){
+            return "success";
         }
-        redisService.joinReuqestQueue(""+System.currentTimeMillis());
-        return "success";
+        return "failed";
     }
 
 

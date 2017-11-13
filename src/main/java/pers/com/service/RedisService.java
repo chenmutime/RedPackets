@@ -3,7 +3,6 @@ package pers.com.service;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import pers.com.constant.CommonConstant;
 import pers.com.dao.PacketDao;
@@ -21,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RedisService {
 
     public static final int GOOD_SIZE = 1000;
-    private int WAIT_QUEUE_SIZE = GOOD_SIZE*3;
-    private volatile boolean isFinish = false;
+    private int WAIT_QUEUE_SIZE = GOOD_SIZE*2;
     private volatile AtomicInteger size = new AtomicInteger();
+    private volatile boolean isFinish = false;
 
     @Autowired
     private PacketDao packetDao;
@@ -32,10 +31,6 @@ public class RedisService {
     private RedisDao redisDao;
 
     private BlockingQueue<String> requestQueue = new ArrayBlockingQueue(WAIT_QUEUE_SIZE);
-
-    public boolean isFinish(){
-        return isFinish;
-    }
 
     public boolean joinReuqestQueue(String tel) {
         if(size.get() < WAIT_QUEUE_SIZE) {
@@ -61,7 +56,7 @@ public class RedisService {
     }
 
     public void stop(String packetName){
-        System.out.println("活动结束！");
+        System.out.println("活动结束！已处理"+size.get()+"人");
         isFinish = true;
         redisDao.delete(CommonConstant.RedisKey.SUCCESS_LIST);
         redisDao.delete(CommonConstant.RedisKey.FAILED_LIST);
