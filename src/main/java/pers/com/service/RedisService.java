@@ -55,11 +55,6 @@ public class RedisService {
         isFinish = false;
         while(!isFinish){
             if(!requestQueue.isEmpty()) {
-                if(redisDao.isFinish(packetName)){
-                    System.out.println("活动已经结束了");
-                    isFinish = true;
-                    break;
-                }
                 getRedPacket(packetName, requestQueue.poll());
             }
         }
@@ -69,6 +64,7 @@ public class RedisService {
         System.out.println("活动结束！");
         isFinish = true;
         redisDao.delete(CommonConstant.RedisKey.SUCCESS_LIST);
+        redisDao.delete(CommonConstant.RedisKey.FAILED_LIST);
         redisDao.delete(packetName);
         size.set(0);
         requestQueue.clear();
@@ -88,7 +84,7 @@ public class RedisService {
                 } else {
                     System.out.println(tel + "抢红包出现了异常，现在恢复");
                     redisDao.addToFailedList(tel);
-                    redisDao.getPacketsList().leftPush(packetName, packetId);
+                    redisDao.getPacketsList().rightPush(packetName, packetId);
                 }
             }
         }else{
