@@ -9,7 +9,7 @@ import javax.persistence.*;
 /**
  * Created by chenmutime on 2017/11/7.
  */
-@Table
+@Table(name = "i_packet")
 @Entity
 public class Packet {
 

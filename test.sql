@@ -10,15 +10,29 @@ Target Server Type    : MYSQL
 Target Server Version : 50539
 File Encoding         : 65001
 
-Date: 2017-11-10 09:54:07
+Date: 2017-11-14 13:00:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
--- Table structure for `packet`
+-- Table structure for `i_order`
 -- ----------------------------
-DROP TABLE IF EXISTS `packet`;
-CREATE TABLE `packet` (
+DROP TABLE IF EXISTS `i_order`;
+CREATE TABLE `i_order` (
+  `tel` varchar(36) NOT NULL,
+  `packet_id` varchar(36) NOT NULL,
+  PRIMARY KEY (`tel`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of i_order
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `i_packet`
+-- ----------------------------
+DROP TABLE IF EXISTS `i_packet`;
+CREATE TABLE `i_packet` (
   `id` varchar(36) NOT NULL,
   `name` varchar(36) DEFAULT NULL,
   `value` int(8) DEFAULT NULL,
@@ -27,7 +41,7 @@ CREATE TABLE `packet` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of packet
+-- Records of i_packet
 -- ----------------------------
 
 -- ----------------------------
@@ -39,18 +53,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `bind`(IN i_id varchar(36), IN i_tel
 BEGIN
 DECLARE c int;
 DECLARE c2 int;
-start transaction;
-select count(0) into c from packet where tel = i_tel;
-if c = 0  then 
-   update packet set tel = i_tel where id = i_id;
-end if;
-select ROW_COUNT() into c2;
-if c2 > 0 then
-set o_result = 1;
-COMMIT;
+select count(0) into c from i_order where tel = i_tel ;
+if (c = 0)  then 
+   insert into i_order(tel, packet_id) values(i_tel, i_id);
+  set o_result = 1;
 else
-set o_result = -1;
-ROLLBACK;
+ set o_result = -1;
 end if;
 END
 ;;
