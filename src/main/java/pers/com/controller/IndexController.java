@@ -23,6 +23,8 @@ public class IndexController {
 
     @Resource
     private RedisService redisService;
+    @Resource
+    private PacketService packetService;
 
 //    参与秒杀
     @RequestMapping("/miaosha")
@@ -38,6 +40,20 @@ public class IndexController {
     @RequestMapping("/check")
     public String check(@RequestParam("tel")String tel){
          return redisService.checkRedPacket(tel).getMessage();
+    }
+
+    @RequestMapping("/start")
+    @Async
+    public String start(@RequestParam("packetName")String packetName){
+        packetService.start(packetName);
+        return "success";
+    }
+
+    @RequestMapping("/stop")
+    @Async
+    public String stop(@RequestParam("packetName")String packetName){
+        redisService.stop(packetName);
+        return "success";
     }
 }
 
