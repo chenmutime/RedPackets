@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RedisService {
 
     public static final int GOOD_SIZE = 1000;
-    private int WAIT_QUEUE_SIZE = GOOD_SIZE*3;
+    private int WAIT_QUEUE_SIZE = GOOD_SIZE*2;
     private volatile AtomicInteger size = new AtomicInteger();
     private volatile boolean isFinish = false;
     private Executor executor = Executors.newFixedThreadPool(9);
@@ -98,29 +98,6 @@ public class RedisService {
         requestQueue.clear();
         packetDao.deleteAll();
     }
-
-//    public void getRedPacket(String packetName, String tel){
-//        if(!redisDao.isMemberOfSuccessList(tel)) {
-//            String packetId = redisDao.getPacketsList().leftPop(packetName).toString();
-//            if(StringUtils.isEmpty(packetId)){
-//                redisDao.addToFailedList(tel);
-//            }else {
-//                int result = packetDao.bindRedPacket(packetId, tel);
-//                if (result > 0) {
-//                    System.out.println(tel + "抢到红包！");
-//                    redisDao.addToSuccessList(tel);
-//                } else {
-//                    System.out.println(tel + "抢红包出现了异常，现在恢复");
-//                    redisDao.addToFailedList(tel);
-//                    redisDao.getPacketsList().rightPush(packetName, packetId);
-//                }
-//            }
-//        }else{
-//            System.out.println(tel+"已经抢成功过一次！");
-//        }
-//        System.out.println("还剩"+redisDao.getPacketsList().size(packetName)+"个红包");
-//        System.out.println("已有"+redisDao.getSizeOfSuccessList()+"个人抢到");
-//    }
 
     public Response checkRedPacket(String tel){
         Response response = new Response();
