@@ -36,7 +36,9 @@ public class RedisDao {
     public Long getSizeOfSuccessList(){
         return redisTemplate.opsForSet().size(CommonConstant.RedisKey.SUCCESS_LIST);
     }
-
+    public Long getSizeOfFailedList(){
+        return redisTemplate.opsForSet().size(CommonConstant.RedisKey.FAILED_LIST);
+    }
     public ListOperations getPacketsList(){
         return redisTemplate.opsForList();
     }
