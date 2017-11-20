@@ -16,3 +16,4 @@ springboot+redis+mysql实现抢红包功能
 ![测试图](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/qianghongbao.png)
 
 ![测试图2](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/RedPacket2.png)
+![使用wait](http://cmtimeoss.oss-cn-shanghai.aliyuncs.com/wait.png)
