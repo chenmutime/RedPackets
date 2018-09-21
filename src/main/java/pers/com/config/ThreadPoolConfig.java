@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * Created by minming.he on 2017/11/14.
+ * Created by chenmutime on 2017/11/14.
  */
 @Configuration
 public class ThreadPoolConfig {

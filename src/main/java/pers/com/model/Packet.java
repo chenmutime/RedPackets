@@ -1,10 +1,9 @@
 package pers.com.model;
 
-import org.aspectj.lang.annotation.control.CodeGenerationHint;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by chenmutime on 2017/11/7.

@@ -26,8 +26,6 @@ spring:
       charset: utf-8
     converters:
       preferred-json-mapper: jackson
-    multipart:
-      max-file-size: 10MB
   application:
     name: RedPackets
   mvc:
@@ -36,10 +34,6 @@ spring:
     host: 127.0.0.1
     port: 6379
     pool:
-      max-idle: 1000
-      min-idle: 500
-      max-active: 2000
-      max-wait: 1000
       max-total: 10000
       block-when-exhausted: false
-    timeout: 0
+    timeout: 3000
