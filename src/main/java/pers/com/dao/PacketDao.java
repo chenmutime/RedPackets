@@ -14,6 +14,7 @@ public interface PacketDao extends JpaRepository<Packet, String> {
 
     Packet findByTel(String tel);
 
-    @Procedure(procedureName = "bind", name = "bind" , outputParameterName = "o_result")
-    int bindRedPacket(@Param("i_id") String id, @Param("i_tel") String tel);
+    @Procedure(procedureName = "bind", outputParameterName = "o_result")
+    Integer bindRedPacket(@Param("i_id") String id, @Param("i_tel") String tel);
+
 }

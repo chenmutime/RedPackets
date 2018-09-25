@@ -1,19 +1,14 @@
 package pers.com.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pers.com.model.Packet;
 import pers.com.service.PacketService;
 import pers.com.service.RedisService;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by chenmutime on 2017/11/7.
@@ -26,10 +21,12 @@ public class IndexController {
     @Resource
     private PacketService packetService;
 
-//    参与秒杀
-    @RequestMapping("/miaosha")
-    public String requestRedPacket(){
-        if(redisService.joinReuqestQueue(""+System.currentTimeMillis())){
+
+
+//        参与秒杀
+    @GetMapping("/miaosha")
+    public String requestRedPacket() {
+        if (!redisService.isFinish("red") && redisService.joinReuqestQueue("" + System.currentTimeMillis())) {
             return "success";
         }
         return "failed";
@@ -37,21 +34,35 @@ public class IndexController {
 
 
     //前端定时请求查看是否抢到红包
-    @RequestMapping("/check")
-    public String check(@RequestParam("tel")String tel){
-         return redisService.checkRedPacket(tel).getMessage();
+    @GetMapping("/check")
+    public String check(@RequestParam("tel") String tel) {
+        return redisService.checkRedPacket(tel).getMessage();
     }
 
-    @RequestMapping("/start")
+    /**
+     * 往数据库添加测试数据（红包）
+     * PS：TaskService中已经实现了定时开启
+     *
+     * @param packetName
+     * @return
+     */
+    @GetMapping("/start")
     @Async
-    public String start(@RequestParam("packetName")String packetName){
+    public String start(@RequestParam("packetName") String packetName) {
         packetService.start(packetName);
         return "success";
     }
 
-    @RequestMapping("/stop")
+    /**
+     * 停止抢红包活动，并清除所有数据
+     * PS：TaskService中已经实现了定时关闭
+     *
+     * @param packetName
+     * @return
+     */
+    @GetMapping("/stop")
     @Async
-    public String stop(@RequestParam("packetName")String packetName){
+    public String stop(@RequestParam("packetName") String packetName) {
         redisService.stop(packetName);
         return "success";
     }

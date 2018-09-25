@@ -15,10 +15,13 @@ public class Packet {
     @Id
     @Column
     private String id;
+//    红包名称
     @Column
     private String name;
+//    随机金额
     @Column
     private Integer value;
+//    绑定的手机号
     @Column
     private String tel;
 

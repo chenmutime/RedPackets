@@ -2,6 +2,8 @@ package pers.com.service;
 
 import org.apache.coyote.Response;
 import org.hibernate.exception.LockAcquisitionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import pers.com.dao.PacketDao;
 import pers.com.dao.RedisDao;
 import pers.com.model.Packet;
 
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -24,11 +27,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class RedisService {
 
+    private Logger logger = LoggerFactory.getLogger(RedisService.class);
+
     public static final int GOOD_SIZE = 1000;
     private int WAIT_QUEUE_SIZE = GOOD_SIZE * 3;
     private volatile AtomicInteger size = new AtomicInteger();
     private volatile boolean isFinish = false;
-    private volatile int index = 0;
+    private volatile int repeatCount = 0;
     private volatile int reqCount = 0;
 
     @Autowired
@@ -71,7 +76,7 @@ public class RedisService {
                             } else {
                                 try {
                                     int result = packetDao.bindRedPacket(packetId.toString(), tel);
-                                    if (result > 0) {
+                                    if (result >= 0) {
                                         System.out.println(tel + "抢到红包！");
                                         redisDao.addToSuccessList(tel);
                                     } else {
@@ -79,14 +84,16 @@ public class RedisService {
                                         throw new Exception();
                                     }
                                 } catch (Exception e) {
-//                                    如果重复插入手机号会出现主键重复异常，这时候恢复库存；由于前端的控制，理论上不会重复提交手机号，但为了防止意外或者恶意请求的发升，因此try catch
-                                    System.out.println(tel + "抢红包出现了异常，现在恢复");
-                                    ++index;
+//                                    如果重复插入手机号会出现主键重复异常，这时候恢复库存；
+//                                      由于前端的控制，理论上不会重复提交手机号，但为了防止意外或者恶意请求的发升，因此try catch
+                                    logger.error(tel + "抢红包出现了异常，现在恢复", e);
+//                                    System.out.println(tel + "抢红包出现了异常，现在恢复");
+                                    ++repeatCount;
                                     redisDao.getPacketsList().rightPush(packetName, packetId);
                                 }
                             }
                         } else {
-                            ++index;
+                            ++repeatCount;
                             System.out.println(tel + "已经抢成功过一次！");
                         }
                     }
@@ -100,7 +107,7 @@ public class RedisService {
         System.out.println("红包：" + packetId);
         System.out.println("还剩" + redisDao.getPacketsList().size(packetName) + "个红包");
         System.out.println("已有" + redisDao.getSizeOfSuccessList() + "个人抢到");
-        System.out.println("有" + index + "个重复请求");
+        System.out.println("有" + repeatCount + "个重复请求");
         System.out.println("有" + reqCount + "个请求");
         System.out.println("还剩" + requestQueue.size() + "个请求未被处理");
         System.out.println("有" + redisDao.getSizeOfFailedList() + "个请求抢购失败了");
@@ -110,7 +117,6 @@ public class RedisService {
         redisDao.delete(packetName);
         size.set(0);
         requestQueue.clear();
-        packetDao.deleteAll();
         orderDao.deleteAll();
     }
 
@@ -131,6 +137,10 @@ public class RedisService {
             response.setMessage("继续等待");
         }
         return response;
+    }
+
+    public boolean isFinish(String packetName) {
+        return redisDao.isFinish(packetName);
     }
 
 }
