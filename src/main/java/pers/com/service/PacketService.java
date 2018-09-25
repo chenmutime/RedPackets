@@ -38,7 +38,7 @@ public class PacketService {
                 packet.setValue(new Random().nextInt(100));
                 list.add(packet);
             }
-            packets = packetDao.saveAll(list);
+            packets = packetDao.save(list);
         }
         return packets;
     }
