@@ -27,7 +27,7 @@ public class PacketService {
     private RedisService redisService;
 
     public void saveSmallPackets(String packetName, List<Packet> packets){
-        packets = packetDao.save(packets);
+        packets = packetDao.saveAll(packets);
         if(null != packets && !packets.isEmpty()){
             List<String> packetIds = packets.stream().map(Packet::getId).collect(Collectors.toList());
             redisDao.getPacketsList().leftPushAll(packetName,packetIds);
