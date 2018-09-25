@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -19,11 +20,11 @@ public class Application implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class,args);
+        new SpringApplication(Application.class).run(args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         logger.error("---------抢红包已启动---------");
     }
 }

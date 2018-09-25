@@ -1,23 +1,15 @@
 spring:
+  application:
+    name: RedPackets
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
-    min-idle: 100
-    max-active: 1000
-    initial-size: 200
-    poolPreparedStatements: true
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-    filters: stat,wall
-    maxPoolPreparedStatementPerConnectionSize: 20
-    testOnReturn: false
-    testOnBorrow: false
-    testWhileIdle: true
-    validationQuery: SELECT 1 FROM DUAL
-    minEvictableIdleTimeMillis: 300000
-    timeBetweenEvictionRunsMillis: 60000
   jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate.ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5Dialect
   thymeleaf:
       mode: HTML5
@@ -26,11 +18,10 @@ spring:
       charset: utf-8
     converters:
       preferred-json-mapper: jackson
-  application:
-    name: RedPackets
   mvc:
     static-path-pattern: /**
   redis:
+    database: 0
     host: 127.0.0.1
     port: 6379
     pool:
