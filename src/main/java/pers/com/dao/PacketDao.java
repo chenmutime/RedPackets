@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pers.com.model.Packet;
 
 /**
@@ -14,6 +15,7 @@ public interface PacketDao extends JpaRepository<Packet, String> {
 
     Packet findByTel(String tel);
 
+    @Transactional
     @Procedure(procedureName = "bind", outputParameterName = "o_result")
     Integer bindRedPacket(@Param("i_id") String id, @Param("i_tel") String tel);
 
