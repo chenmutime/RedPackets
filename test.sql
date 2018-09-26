@@ -55,7 +55,7 @@ DECLARE c int;
 DECLARE c2 int;
 select count(0) into c from i_order where tel = i_tel ;
 if (c = 0)  then 
-   insert into i_order(tel, packet_id) values(i_tel, i_id);
+  insert into i_order(tel, packet_id) values(i_tel, i_id);
   set o_result = 1;
 else
  set o_result = -1;
