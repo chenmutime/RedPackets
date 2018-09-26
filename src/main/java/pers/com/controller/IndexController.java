@@ -9,6 +9,7 @@ import pers.com.service.PacketService;
 import pers.com.service.RedisService;
 
 import javax.annotation.Resource;
+import java.util.Random;
 
 /**
  * Created by chenmutime on 2017/11/7.
@@ -22,11 +23,10 @@ public class IndexController {
     private PacketService packetService;
 
 
-
-//        参与秒杀
+    //        参与秒杀
     @GetMapping("/miaosha")
     public String requestRedPacket() {
-        if (!redisService.isFinish("red") && redisService.joinReuqestQueue("" + System.currentTimeMillis())) {
+        if (redisService.joinRequestQueue("" + new Random().nextInt(20000))) {
             return "success";
         }
         return "failed";
@@ -61,7 +61,6 @@ public class IndexController {
      * @return
      */
     @GetMapping("/stop")
-    @Async
     public String stop(@RequestParam("packetName") String packetName) {
         redisService.stop(packetName);
         return "success";
