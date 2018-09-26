@@ -29,6 +29,10 @@ public class RedisDao {
         redisTemplate.opsForSet().add(CommonConstant.RedisKey.FAILED_LIST, ele);
     }
 
+    public void removeFromFailedList(String ele){
+        redisTemplate.opsForSet().remove(CommonConstant.RedisKey.FAILED_LIST, ele);
+    }
+
     public boolean isMemberOfFailedList(String ele){
         return redisTemplate.opsForSet().isMember(CommonConstant.RedisKey.FAILED_LIST, ele);
     }
@@ -47,7 +51,4 @@ public class RedisDao {
         redisTemplate.delete(key);
     }
 
-    public boolean isFinish(String packetName){
-        return getPacketsList().size(packetName) == 0;
-    }
 }
