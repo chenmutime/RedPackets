@@ -4,6 +4,8 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      minimum-idle: 5
   jpa:
     database: MYSQL
     database-platform: org.hibernate.dialect.MySQL5Dialect
