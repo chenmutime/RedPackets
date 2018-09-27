@@ -29,8 +29,8 @@ public class RedisService {
     private int WAIT_QUEUE_SIZE = GOOD_SIZE * 3;
     private AtomicInteger size = new AtomicInteger();
     private volatile boolean isFinish = false;
-    private volatile Integer repeatCount = 0;
-    private volatile Integer requestCount = 0;
+    private volatile int repeatCount = 0;
+    private volatile int requestCount = 0;
 
     @Autowired
     ThreadPoolTaskExecutor threadPoolTaskExecutor;

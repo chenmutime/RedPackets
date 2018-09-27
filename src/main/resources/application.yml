@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: RedPackets
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&autoReconnect=true
     username: root
@@ -9,17 +11,11 @@ spring:
   jpa:
     database: MYSQL
     database-platform: org.hibernate.dialect.MySQL5Dialect
-  thymeleaf:
-      mode: HTML5
   http:
     encoding:
       charset: utf-8
     converters:
       preferred-json-mapper: jackson
-  application:
-    name: RedPackets
-  mvc:
-    static-path-pattern: /**
   redis:
     host: 127.0.0.1
     port: 6379
