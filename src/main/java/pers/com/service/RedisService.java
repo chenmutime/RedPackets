@@ -39,7 +39,7 @@ public class RedisService {
     @Autowired
     private RedisDao redisDao;
 
-    //    每秒允许有1000次访问，QPS
+    //    每秒最多允许有1000次访问，QPS
     private RateLimiter rateLimiter = RateLimiter.create(1000);
 
     public boolean joinRequestQueue(String tel, String packetName) {
