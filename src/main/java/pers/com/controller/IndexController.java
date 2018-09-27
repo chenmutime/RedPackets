@@ -26,17 +26,10 @@ public class IndexController {
     //        参与秒杀
     @GetMapping("/miaosha")
     public String requestRedPacket() {
-        if (redisService.joinRequestQueue("" + new Random().nextInt(20000))) {
+        if (redisService.joinRequestQueue("" + new Random().nextInt(20000), "red")) {
             return "success";
         }
         return "failed";
-    }
-
-
-    //前端定时请求查看是否抢到红包
-    @GetMapping("/check")
-    public String check(@RequestParam("tel") String tel) {
-        return redisService.checkRedPacket(tel).getMessage();
     }
 
     /**
@@ -57,7 +50,6 @@ public class IndexController {
      * 停止抢红包活动，并清除所有数据
      * PS：TaskService中已经实现了定时关闭
      *
-     * @param packetName
      * @return
      */
     @GetMapping("/stop")

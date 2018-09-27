@@ -43,6 +43,11 @@ public class PacketService {
         return packets;
     }
 
+    /**
+     * 添加测试数据以及同步红包ID到redis
+     * @param packetName
+     * @return
+     */
     public String start(String packetName) {
         List<Packet> packets = initDataBase(packetName);
         List<String> packetIds = packets.stream().map(Packet::getId).collect(Collectors.toList());
@@ -51,9 +56,5 @@ public class PacketService {
         return "success";
     }
 
-    public String stop(String packetName) {
-        redisService.stop(packetName);
-        return "success";
-    }
 
 }
